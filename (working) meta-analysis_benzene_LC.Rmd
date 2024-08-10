@@ -119,33 +119,34 @@ forest(ma_collap, xlim = c(0.5,3), pooled.totals = F,  layout = "RevMan5", rando
 ```{r}
 
 dat_ever <- tribble(~study, ~year, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,  ~comp_grp, ~study_type, ~study_quality, ~exposure_quality, ~region, ~sex, ~smoking,
-               "Wong et al. (1987)", 1987, 1.29, 1.00, 1.65, 18, "cohort", "industry-based", "external", "cohort studies with external comparison",  "moderate",  "medium", "USA", "only male", "not adjusted",
+               "Wong et al. (1987)", 1987, 1.29, 1.00, 1.65, 18, "Cohort", "Industry-based", "external", "Cohort studies with external comparison",  "Moderate",  "Medium", "USA", "only male", "not adjusted",
                # for collins (2003), the sum o/e is calculated (252/191.8) to obtain ever_exp estimates
-               "Collins et al. (2003)", 2003, 1.31, 1.16, 1.48, 252, "cohort", "industry-based", "external", "cohort studies with external comparison", "moderate", "high", "USA", "mixed", "not adjusted",
-               "Sorahan et al. (2005)", 2005, 1.19, 1.06, 1.34, 293, "cohort", "industry-based", "external", "cohort studies with external comparison", "moderate", "low", "Europe", "mixed", "not adjusted",
-               "Hoshuyama et al. (2006)",2006, 1.04, 1.00, 1.08, 11, "cohort", "industry-based", "internal", "cohort studies with internal comparison", "moderate", "medium", "Asia", "only male", "not adjusted",
-               "Koh et al. (2011)", 2011, 0.35, 0.11, 0.83, 6, "cohort", "industry-based", "external", "cohort studies with external comparison", "moderate", "low", "Asia", "only male", "not adjusted",
-               "Koh et al. (2014)", 2014, 0.73, 0.24, 1.71, 5, "cohort", "industry-based", "external", "cohort studies with external comparison", "low", "low", "Asia", "only male","not adjusted",
-               "Linet et al. (2015)",2015, 1.5, 1.2, 1.9, 351, "cohort", "industry-based", "internal", "cohort studies with internal comparison", "high", "high", "Asia", "mixed","not adjusted",
-               "Collins et al. (2015)", 2015, 1.05, 0.89, 1.24, 146, "cohort", "industry-based", "external", "cohort studies with external comparison", "moderate", "high", "USA", "mixed","not adjusted",
+               "Collins et al. (2003)", 2003, 1.31, 1.16, 1.48, 252, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "High", "USA", "mixed", "not adjusted",
+               "Sorahan et al. (2005)", 2005, 1.19, 1.06, 1.34, 293, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "low", "Europe", "mixed", "not adjusted",
+               "Hoshuyama et al. (2006)",2006, 1.04, 1.00, 1.08, 11, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "Moderate", "Medium", "Asia", "only male", "not adjusted",
+               "Koh et al. (2011)", 2011, 0.35, 0.11, 0.83, 6, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "Low", "Asia", "only male", "not adjusted",
+               "Koh et al. (2014)", 2014, 0.73, 0.24, 1.71, 5, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Low", "Low", "Asia", "only male","not adjusted",
+               "Linet et al. (2015)",2015, 1.5, 1.2, 1.9, 351, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "High", "High", "Asia", "mixed","not adjusted",
+               "Collins et al. (2015)", 2015, 1.05, 0.89, 1.24, 146, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "High", "USA", "mixed","not adjusted",
                # for Babigumira 2023, fixed-effect MA for three exp categories was used to estimate the ever_exp est.
-               "Babigumira et al. (2023)",2023, 1.29, 0.98, 1.71, 292, "cohort", "industry-based", "internal", "cohort studies with internal comparison", "high", "high", "Europe", "only male","adjusted",
-               "Wan et al. (2024)", 2024, 1.17, 1.10, 1.24, 5838, "case-control", "population-based", "internal",  "case-control", "high", "medium", "Europe", "mixed","adjusted",
+               "Babigumira et al. (2023)",2023, 1.29, 0.98, 1.71, 292, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "High", "High", "Europe", "only male","adjusted",
+               "Wan et al. (2024)", 2024, 1.17, 1.10, 1.24, 5838, "Case-control", "population-based", "internal",  "Case-control", "high", "medium", "Europe", "mixed","adjusted",
                # for mattei 2016, fixed-effect MA for three exp categories was used to estimate the ever_exp est.
                # "Mattei et al. (2016)", 0.95, 0.66, 1.36, 343, "case-control", "population-based", "internal", "case-control", "high", "low", "Europe", "mixed","adjusted",
-               "McHugh et al. (2010)", 2010, 1.13, 0.69, 1.86, 38, "case-control", "population-based", "internal","case-control", "moderate", "low", "USA", "mixed","adjusted",
-               "Greenland et al. (1994)",1994, 0.58, 0.31, 1.07, -99999, "case-control", "industry-based", "internal", "case-control", "moderate", "medium", "USA", "only male","not adjusted",
+               "McHugh et al. (2010)", 2010, 1.13, 0.69, 1.86, 38, "Case-control", "population-based", "internal","Case-control", "Moderate", "low", "USA", "mixed","adjusted",
+               "Greenland et al. (1994)",1994, 0.58, 0.31, 1.07, -99999, "Case-control", "Industry-based", "internal", "Case-control", "Moderate", "medium", "USA", "only male","not adjusted",
                ## excluded wong study 
                # "Wong et al (1993)_land", 0.66, 0.57, 0.77, 165, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
                # "Wong et al (1993)_marine", 1.07, 0.94, 1.21, 208, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
                # "Wong et al (1993)_calculated_combined", 0.8394, 0.7574, 0.9279, 373, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
-               )
+               ) %>% 
+    mutate(across(7:15, ~ str_replace(., "^.", toupper)))
 
-dat_ever$study_quality <- factor(dat_ever$study_quality, 
-                                 levels = c("high", "moderate", "low"))
+dat_ever$study_quality <- factor(dat_ever$study_quality,
+                                 levels = c("High", "Moderate", "Low"))
 
-dat_ever$exposure_quality <- factor(dat_ever$exposure_quality, 
-                                 levels = c("high", "medium", "low"))
+dat_ever$exposure_quality <- factor(dat_ever$exposure_quality,
+                                 levels = c("High", "Medium", "Low"))
 
 
 order_dat <- dat_ever[order(dat_ever$year),]
@@ -371,11 +372,8 @@ forest(ma_ever_incl.syn,
 
 ##3.3 do various subgroup analyses 
 
-###3.3.1 Effect sizes from highest vs. lowest exposure category used
-3. do various sensitivity analyses:
-  3.1 Meta-regression over three studies that reported original benzene exposure scales (with ref to https://ehp.niehs.nih.gov/doi/10.1289/ehp.1306880)
-  3.2 break-up pooled studies from Wan et al. (2024) and include these as individual studies to be included with other studies for MA on ever-exposure
   3.3 do various subgroup analyses 
+    3.3.0 study design (external, internal, cohort, case-control)
     3.3.1 effect sizes from highest vs. lowest exposure category used
     3.3.2 overall quality (low, moderate, high)
     3.3.3 exposure assessment quality (low, medium, high)
@@ -385,26 +383,200 @@ forest(ma_ever_incl.syn,
   3.5 pub bias
 
 
+###3.3.0 study design (external, internal, cohort, case-control)
+
+```{r design}
+
+
+order_dat <- dat_ever[order(dat_ever$year),] %>% 
+  mutate(study_type = factor(order_dat$study_type,
+                             ,levels = c("Cohort studies with external comparison", "Cohort studies with internal comparison", "Case-control" )))
+
+ma_ever_2 <- metagen(data = order_dat,
+                   TE = log(order_dat$rr),
+                   studlab = study,
+                   sm = "RR",
+                   fixed = F, 
+                   random = T,
+                   method.tau = "REML",
+                   lower = log(order_dat$lower_ci),
+                   upper = log(order_dat$upper_ci),
+                   hakn = TRUE,
+                   subgroup = study_type #vary this so various stratification can be made
+                   )
+# ma_ever$studlab <- "Study"
+
+forest(ma_ever_2,
+       xlim = c(0.5,2.5), 
+       pooled.totals = T,  
+       # layout = "BMJ",
+       random = T,
+       weight.study = "random", 
+       common = F, 
+       # subgroup = F,     
+       # col.subgroup = "black", # Set subgroup label color to black
+       # font.subgroup = 2, # Set font style to bold for subgroup labels
+       cex = 1.2, # Increase text size for readability
+       col.diamond = "blue", # Use high contrast color
+       col.square = "darkgreen", 
+       col.inside = "black", 
+       col.study = "black",
+       col.label = "black",
+       text.random = "Overall", 
+       fs.hetstat = 9, 
+       digits.se = 2, 
+       digits.TE = 2,
+       subgroup.name = "",
+       col.subgroup = "black",
+       leftcols = c("studlab", "TE","seTE"),
+       just = "left")
+
+
+summary(ma_ever_2)
+
+
+```
+
+
+
+```{r by design cohort vs cc}
+
+
+order_dat <- dat_ever[order(dat_ever$year),] %>% 
+  mutate(study_type = factor(order_dat$study_type,
+                             ,levels = c("Cohort studies with external comparison", "Cohort studies with internal comparison", "Case-control" )))
+
+ma_ever_2 <- metagen(data = order_dat,
+                   TE = log(order_dat$rr),
+                   studlab = study,
+                   sm = "RR",
+                   fixed = F, 
+                   random = T,
+                   method.tau = "REML",
+                   lower = log(order_dat$lower_ci),
+                   upper = log(order_dat$upper_ci),
+                   hakn = TRUE,
+                   subgroup = design #vary this so various stratification can be made
+                   )
+# ma_ever$studlab <- "Study"
+
+forest(ma_ever_2,
+       xlim = c(0.5,2.5), 
+       pooled.totals = T,  
+       # layout = "BMJ",
+       random = T,
+       weight.study = "random", 
+       common = F, 
+       # subgroup = F,     
+       # col.subgroup = "black", # Set subgroup label color to black
+       # font.subgroup = 2, # Set font style to bold for subgroup labels
+       cex = 1.2, # Increase text size for readability
+       col.diamond = "blue", # Use high contrast color
+       col.square = "darkgreen", 
+       col.inside = "black", 
+       col.study = "black",
+       col.label = "black",
+       text.random = "Overall", 
+       fs.hetstat = 9, 
+       digits.se = 2, 
+       digits.TE = 2,
+       subgroup.name = "",
+       col.subgroup = "black",
+       leftcols = c("studlab", "TE","seTE"),
+       just = "left")
+
+
+summary(ma_ever_2)
+
+
+```
+
+###3.3.1 Effect sizes from highest vs. lowest exposure category used
+
 ```{r low exposure}
 
 # 
+dat_low <- tribble(~study, ~year, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,
+               "Wong et al. (1987): sporadic exposure", 1987, 1.46, 0.86, 2.3, 18, "cohort", "industry-based",
+               "Collins et al. (2003): low exposure", 2003, 1.1, 0.7, 1.5, 32, "cohort", "industry-based",
+               "Sorahan et al. (2005)", 2005, 1.19, 1.06, 1.34, 293, "cohort", "industry-based",
+               "Hoshuyama et al. (2006)",2006, 1.04, 1.00, 1.08, 11, "cohort", "industry-based",
+               "Koh et al. (2011)", 2011, 0.35, 0.11, 0.83, 6, "cohort", "industry-based",
+               "Koh et al. (2014)", 2014, 0.73, 0.24, 1.71, 5, "cohort", "industry-based",
+               "Linet et al. (2015)", 2015, 1.5, 1.2, 1.9, 351, "cohort", "industry-based",
+               "Collins et al. (2015)", 2015, 1.05, 0.89, 1.24, 146, "cohort", "industry-based",
+               "Babigumira et al. (2023): low exposure",2023,  1.47, 0.9, 2.4, -9999, "cohort", "industry-based",
+               "Wan et al. (2024): low exposure",2024, 1.12, 1.03, 1.21, 12329, "case-control", "population-based",
+               # "Mattei et al. (2016)_low", 1.01, 0.59, 1.71, 129, "case-control", "population-based",
+               "McHugh et al. (2010)",2010,  1.13, 0.69, 1.86, 38, "case-control", "population-based",
+               "Greenland et al. (1994)", 1994, 0.58, 0.31, 1.07, -99999, "case-control", "industry-based")
+
+dat_low <- dat_low[order(dat_low$year),]
+
+#
+meta_dat1 <- metagen(data = dat_low,
+                   TE = log(dat_low$rr),
+                   studlab = study,
+                   sm = "RR",
+                   fixed = F, 
+                   random = T,
+                   method.tau = "REML",
+                   lower = log(dat_low$lower_ci),
+                   upper = log(dat_low$upper_ci),
+                   hakn = TRUE
+                   )
+
+forest(meta_dat1,
+       xlim = c(0.8,2), 
+       pooled.totals = T,  
+       # layout = "BMJ",
+       random = T,
+       weight.study = "random", 
+       common = F, 
+       # subgroup = F,     
+       # col.subgroup = "black", # Set subgroup label color to black
+       # font.subgroup = 2, # Set font style to bold for subgroup labels
+       cex = 1.2, # Increase text size for readability
+       col.diamond = "blue", # Use high contrast color
+       col.square = "darkgreen", 
+       col.inside = "black", 
+       col.study = "black",
+       col.label = "black",
+       text.random = "Overall", 
+       fs.hetstat = 9, 
+       digits.se = 2, 
+       digits.TE = 2,
+       col.subgroup = "black",
+       leftcols = c("studlab", "TE","seTE"),
+       just = "left")
+
+
+```
+
+
+```{r high exposure}
+
 dat_high <- tribble(~study, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,
-               "Wong et al. (1987): sporadic exposure", 1.46, 0.86, 2.3, 18, "cohort", "industry-based",
-               "Collins et al. (2003): low exposure", 1.1, 0.7, 1.5, 32, "cohort", "industry-based",
+               "Wong et al. (1987)", 1.25, 0.91, 1.66, 65, "cohort", "industry-based",
+               "Collins et al. (2003): high exposure group", 1.6, 1.2, 2.1, 55, "cohort", "industry-based",
                "Sorahan et al. (2005)", 1.19, 1.06, 1.34, 293, "cohort", "industry-based",
                "Hoshuyama et al. (2006)", 1.04, 1.00, 1.08, 11, "cohort", "industry-based",
-               "Koh et al. (2011)", 0.35, 0.11, 0.83, 6, "cohort", "industry-based",
+               "Koh et al. (2011): high exposure group", 1.42, 0.52, 3.09, 6, "cohort", "industry-based",
                "Koh et al. (2014)", 0.73, 0.24, 1.71, 5, "cohort", "industry-based",
                "Linet et al. (2015)", 1.5, 1.2, 1.9, 351, "cohort", "industry-based",
                "Collins et al. (2015)", 1.05, 0.89, 1.24, 146, "cohort", "industry-based",
-               "Babigumira et al. (2023): low exposure", 1.47, 0.9, 2.4, -9999, "cohort", "industry-based",
-               "Wan et al. (2024): low exposure", 1.12, 1.03, 1.21, 12329, "case-control", "population-based",
-               # "Mattei et al. (2016)_low", 1.01, 0.59, 1.71, 129, "case-control", "population-based",
+               "Babigumira et al. (2023): high exposure group", 1.15, 0.61, 2.16, -9999, "cohort", "industry-based",
+               "Wan et al. (2024): high exposure group", 1.32, 1.18, 1.48, 12329, "case-control", "population-based",
+               # "Mattei et al. (2016)", 0.95, 0.44, 2.04, 129, "case-control", "population-based",
                "McHugh et al. (2010)", 1.13, 0.69, 1.86, 38, "case-control", "population-based",
-               "Greenland et al. (1994)", 0.58, 0.31, 1.07, -99999, "case-control", "industry-based")
+               "Greenland et al. (1994)", 0.58, 0.31, 1.07, -99999, "case-control", "industry-based") %>% 
+  as.data.frame() %>% 
+  cbind(dat_ever$year) %>% 
+  rename(year = colnames(dat_high)[8])
 
-#
-meta_dat1 <- metagen(data = dat_high,
+dat_high <- dat_high[order(dat_high$year),]
+
+meta_dat2 <- metagen(data = dat_high,
                    TE = log(dat_high$rr),
                    studlab = study,
                    sm = "RR",
@@ -416,7 +588,7 @@ meta_dat1 <- metagen(data = dat_high,
                    hakn = TRUE
                    )
 
-forest(meta_dat1,
+forest(meta_dat2,
        xlim = c(0.8,2), 
        pooled.totals = T,  
        # layout = "BMJ",
@@ -436,44 +608,49 @@ forest(meta_dat1,
        fs.hetstat = 9, 
        digits.se = 2, 
        digits.TE = 2,
-       leftcols = c("studlab", "seTE"),
+       col.subgroup = "black",
+       leftcols = c("studlab", "TE","seTE"),
        just = "left")
-
 
 ```
 
 
-```{r high exposure}
+###3.3.2-5 subgroup (batch producing)
+    3.3.2 overall quality (low, moderate, high)
+    3.3.3 exposure assessment quality (low, medium, high)
+    3.3.4 whether smoking was adjusted
+    3.3.5 stratify by continent
 
-dat <- tribble(~study, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,
-               "Wong et al. (1987)_conti_exp", 1.25, 0.91, 1.66, 65, "cohort", "industry-based",
-               "Collins et al. (2003)_high_exp", 1.6, 1.2, 2.1, 55, "cohort", "industry-based",
-               "Sorahan et al. (2005)_incidence", 1.19, 1.06, 1.34, 293, "cohort", "industry-based",
-               "Hoshuyama et al. (2006)", 1.04, 1.00, 1.08, 11, "cohort", "industry-based",
-               "Koh et al. (2011)_high_exp", 1.42, 0.52, 3.09, 6, "cohort", "industry-based",
-               "Koh et al. (2014)_incidence", 0.73, 0.24, 1.71, 5, "cohort", "industry-based",
-               "Linet et al. (2015)", 1.5, 1.2, 1.9, 351, "cohort", "industry-based",
-               "Collins et al. (2015)", 1.05, 0.89, 1.24, 146, "cohort", "industry-based",
-               "Babigumira et al. (2023)_high_exp", 1.15, 0.61, 2.16, -9999, "cohort", "industry-based",
-               "Wan et al. (2024)_high_exp", 1.32, 1.18, 1.48, 12329, "case-control", "population-based",
-               # "Mattei et al. (2016)", 0.95, 0.44, 2.04, 129, "case-control", "population-based",
-               "McHugh et al. (2010)", 1.13, 0.69, 1.86, 38, "case-control", "population-based",
-               "Greenland et al. (1994)", 0.58, 0.31, 1.07, -99999, "case-control", "industry-based")
+```{r}
 
-meta_dat1 <- metagen(data = dat1,
-                   TE = log(dat1$rr),
+glimpse(dat_ever)
+
+subgroup <- c("type", "study_quality", "exposure_quality", "sex", "smoking", "region")
+
+dat_ever$region <- ifelse(dat_ever$region == "USA", "North America", dat_ever$region)
+
+for (i in subgroup) {
+  
+ma_ever_sub <- metagen(data = dat_ever,
+                   TE = log(dat_ever$rr),
                    studlab = study,
                    sm = "RR",
                    fixed = F, 
                    random = T,
                    method.tau = "REML",
-                   lower = log(dat1$lower_ci),
-                   upper = log(dat1$upper_ci),
-                   hakn = TRUE
+                   lower = log(dat_ever$lower_ci),
+                   upper = log(dat_ever$upper_ci),
+                   hakn = TRUE,
+                   subgroup = eval(parse(text = paste0(i))) 
                    )
-
-forest(meta_dat1,
-       xlim = c(0.8,2), 
+# ma_ever$studlab <- "Study"
+ file_name <- paste0("forest_plot_", i, ".png")
+  
+  # Open the PNG device
+  png(file_name, width = 900, height = 600)
+  
+forest(ma_ever_sub,
+       xlim = c(0.5,2.5), 
        pooled.totals = T,  
        # layout = "BMJ",
        random = T,
@@ -492,10 +669,92 @@ forest(meta_dat1,
        fs.hetstat = 9, 
        digits.se = 2, 
        digits.TE = 2,
-       leftcols = c("studlab", "seTE"),
+       subgroup.name = "",
+       col.subgroup = "black",
+       # leftcols = c("studlab", "TE","seTE"),
        just = "left")
 
+dev.off()
+}
+
+
+
 ```
+
+
+  3.4 combine all results from 3.3 to produce one figure (fig 3)  
+  3.5 pub bias
+
+##3.4 combine subgroup results
+
+```{r}
+
+sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
+                      "Study design", "Cohort", 1.18, 1.02, 1.36,
+                      "Study design", "Cohort studies with external comparison", 1.18, 0.99, 1.42,
+                      "Study design", "Cohort studies with internal comparison", 1.23, 0.76, 1.99,
+                      "Study design", "Case-control", 1.00, 0.43, 2.35,
+                      "Study design", "Industry-based", 1.16, 0.99, 1.36,
+                      "Study design", "Population-based", 1.17, 1.11, 1.23,
+                      
+                      "Exposure Level", "Low exposure group", 1.12, 1, 1.26,
+                      "Exposure Level", "High exposure group", 1.19, 1.05, 1.36,
+                      
+                      "Study quality", "High", 1.27, 0.93, 1.75,
+                      "Study quality", "Moderate", 1.12, 0.95, 1.32,
+                      "Study quality", "Low", 0.73, 0.24, 1.71,
+                      
+                      "Exposure quality", "High", 1.26, 1, 1.6,
+                      "Exposure quality", "Medium", 1.1, 0.86, 1.42,
+                      "Exposure quality", "Low", 0.94, 0.45, 1.99,
+
+                      "Smoking adjustment", "Adjusted", 1.17, 1.1, 1.25,
+                      "Smoking adjustment", "Not adjusted", 1.14, 0.95, 1.38,
+                      
+                      "Continent", "North America", 1.15, 0.88, 1.51,
+                      "Continent", "Europe", 1.18, 1.11, 1.25,
+                      "Continent", "Asia", 0.94, 0.39, 2.3,
+) %>% 
+  as.data.frame() 
+ # mutate(
+ #    group = factor(paste(sub, group, sep = " - "), levels = unique(paste(sub, group, sep = " - ")))
+ #  )
+
+glimpse(sub_result)
+
+
+require(ggforce)
+ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
+  geom_point(size = 3) +  # Points with different shapes
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.2) +  # Error bars
+  scale_color_brewer(palette = "Dark2") +  # Colorblind-friendly palette
+  scale_shape_manual(values = c(16, 17, 15, 18, 19, 20)) +  # Assign distinct shapes
+  theme_minimal() +  # Minimal theme for clarity
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels
+  labs( y = "Relative Risk (RR)", title = "Relative Risk by Subgroups with 95% CI") +
+  theme(legend.title = element_blank(), legend.position = "") +
+  geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.3) +
+  # coord_flip() +
+  facet_row(~sub, scales = "free", space = "free")  # Facets based on `sub`, free scales and space
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ```{r}
