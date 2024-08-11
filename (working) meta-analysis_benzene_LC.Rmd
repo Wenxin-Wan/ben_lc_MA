@@ -29,12 +29,7 @@ This script follows the systematic search of papers on the effect of occupationa
     3.3.5 stratify by continent
   3.4 combine all results from 3.3 to produce one figure (fig 3)  
   3.5 pub bias
-
-
-  a). highest vs. lowest
-  b). external vs. internal (add descriptors to the tribble dataframe)
-  others as specified in the protocol
-
+4. ROB assessment scores (visualisation of)  
 
 ```{r load packages, include=FALSE}
 
@@ -44,6 +39,17 @@ require(meta)
 require(ggplot2)
 require(readxl)
 require(glmnet)
+require(ggforce)
+require(dosresmeta)
+require(dosresmeta)
+require(rms)
+require(ggforce)
+require(ggsci)
+require(robvis)
+library(tibble)
+library(tidyr)
+library(ggpattern)
+require(ggsci)
 
 ```
 
@@ -223,8 +229,7 @@ dat_metareg <- tribble(~study, ~exp, ~RR, ~lower_ci, ~upper_ci, ~case, ~N, ~type
   mutate(se = if_else(exp == 0, NA, se)) # this makes the control group se == 0, for the calculation of cov matrix
 
 head(dat_metareg)
-require(dosresmeta)
-require(rms)
+
 
 #obtain log-linear function
 
@@ -390,7 +395,7 @@ forest(ma_ever_incl.syn,
 
 order_dat <- dat_ever[order(dat_ever$year),] %>% 
   mutate(study_type = factor(order_dat$study_type,
-                             ,levels = c("Cohort studies with external comparison", "Cohort studies with internal comparison", "Case-control" )))
+                             levels = c("Cohort studies with external comparison", "Cohort studies with internal comparison", "Case-control" )))
 
 ma_ever_2 <- metagen(data = order_dat,
                    TE = log(order_dat$rr),
@@ -444,7 +449,7 @@ summary(ma_ever_2)
 
 order_dat <- dat_ever[order(dat_ever$year),] %>% 
   mutate(study_type = factor(order_dat$study_type,
-                             ,levels = c("Cohort studies with external comparison", "Cohort studies with internal comparison", "Case-control" )))
+                             levels = c("Cohort studies with external comparison", "Cohort studies with internal comparison", "Case-control" )))
 
 ma_ever_2 <- metagen(data = order_dat,
                    TE = log(order_dat$rr),
@@ -747,8 +752,7 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
 glimpse(sub_result)
 
 
-require(ggforce)
-require(ggsci)
+
 
 ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   geom_point(size = 4.5) +  # Points with distinct shapes
@@ -781,10 +785,175 @@ ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
 
 
 
+#4. ROB score visulisation
+
+```{r}
+
+# construct ROB table based on the table S1 and S2
+rob_result <- tribble(
+  ~study, ~D1, ~D2, ~D3, ~D4, ~D5, ~D6, 
+  "Wong et al. (1987)",         3, 1, 2, 1, 1, 1,
+  "Collins et al. (2003)",      1, 2, 2, 0, 2, 1,
+  "Sorahan et al. (2005)",      2, 0, 3, 1, 1, 1,
+  "Hoshuyama et al. (2006)",    2, 1, 2, 1, 2, 1,
+  "Koh et al. (2011)",          2, 0, 3, 1, 0, 1,
+  "Koh et al. (2014)",          2, 0, 2, 1, 0, 1,
+  "Linet et al. (2015)",        3, 2, 3, 1, 2, 2,
+  "Collins et al. (2015)",      1, 2, 2, 1, 2, 1,
+  "Babigumira et al. (2023)",   3, 2, 4, 2, 2, 2,
+  "Greenland et al. (1994)*",   3, 1, 3, 0, 2, 1,
+  "McHugh et al. (2010)*",      3, 0, 3, 1, 0, 1,
+  "Wan et al. (2024)*",         2, 1, 4, 2, 0, 2
+                      ) %>% 
+  as.data.frame() %>% 
+    mutate(
+    D1 = case_when(
+      D1 == 3 ~ "low",
+      D1 %in% c(2, 1) ~ "some concern",
+      D1 == 0 ~ "high"
+    ),
+    D2 = case_when(
+      D2 == 2 ~ "low",
+      D2 == 1 ~ "some concern",
+      D2 == 0 ~ "high"
+    ),
+    D3 = case_when(
+      D3 %in% c(4, 3) ~ "low",
+      D3 == 2 ~ "some concern",
+      D3 %in% c(1, 0) ~ "high"
+    ),
+    D4 = case_when(
+      D4 == 2 ~ "low",
+      D4 == 1 ~ "some concern",
+      D4 == 0 ~ "high"
+    ),
+    D5 = case_when(
+      D5 == 2 ~ "low",
+      D5 == 1 ~ "some concern",
+      D5 == 0 ~ "high"
+    ),
+    D6 = case_when(
+      D6 == 2 ~ "low",
+      D6 == 1 ~ "some concern",
+      D6 == 0 ~ "high"
+    )
+  )
+
+                      
+glimpse(rob_result)
+
+# Reshape the data to long format for ggplot
+data_long <- rob_result %>%
+  pivot_longer(cols = starts_with("D"), names_to = "Domain", values_to = "rob") %>% 
+  mutate(Domain = case_when(
+    Domain == "D1" ~ "Population inclusion",
+    Domain == "D2" ~ "Exposure assessment",
+    Domain == "D3" ~ "Outcome assessment",
+    Domain == "D4" ~ "Confounding",
+    Domain == "D5" ~ "Follow-up",
+    Domain == "D6" ~ "Statistical analysis"
+  )) %>% 
+  mutate(Domain = factor(Domain, levels = c( "Population inclusion", "Exposure assessment", "Outcome assessment", "Confounding", "Follow-up", "Statistical analysis"))) %>% 
+  mutate(rob = factor(rob, 
+                         levels = c("low", "some concern", "high"), 
+                         labels = c("Low risk", "Some concern", "High risk"))) %>% 
+  mutate(study = factor(study, levels = rob_result$study))
+
+ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
+  geom_tile_pattern(color = "white", size = 0.2, 
+                    pattern_density = 0.01, # Adjust the density of the pattern
+                    pattern_fill = "black", # Color of the pattern lines
+                    pattern_spacing = 0.05) + # Spacing between pattern lines
+  scale_fill_manual(values = c("Low risk" = "#56B4E9", "Some concern" = "#F0E442", "High risk" = "#D55E00"),
+                    name = "Risk Level",
+                    guide = "legend") +
+  scale_pattern_manual(values = c("Low risk" = "stripe", "Some concern" = "crosshatch", "High risk" = "circle"),
+                       name = "Risk Level",
+                       guide = "legend") +
+  theme_minimal() +
+  labs(
+       x = "",
+       y = "") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text = element_text(face = "bold"))
+
+```
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+
+legancy chunks below, DO NOT RUN. 
+
+
+##########################################################################
 
 
 
@@ -815,10 +984,6 @@ forest(metagen2, xlim = c(0.5,3), pooled.totals = F,  layout = "RevMan5", random
 ```
 
 
-
-
-################################################################################
-###### ever/low exp group used
 
 
 
@@ -868,13 +1033,6 @@ forest(metagen2, xlim = c(0.5,3), pooled.totals = F,  layout = "RevMan5", random
 
 
 ```
-
-
-
-
-
-
-
 
 
 
@@ -1000,28 +1158,6 @@ forest(metagen2, xlim = c(0.5,3), pooled.totals = T, subgroup = F,  layout = "Re
 
 
 ```
-
-
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-
-
-legancy chunks below, DO NOT RUN. 
-
-
-##########################################################################
 
 
 
