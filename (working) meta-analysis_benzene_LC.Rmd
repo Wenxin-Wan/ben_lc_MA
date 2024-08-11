@@ -705,7 +705,7 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
                       "Study quality", "Low", 0.73, 0.24, 1.71,
                       
                       "Exposure quality", "High", 1.26, 1, 1.6,
-                      "Exposure quality", "Medium", 1.1, 0.86, 1.42,
+                      "Exposure quality", "Moderate", 1.1, 0.86, 1.42,
                       "Exposure quality", "Low", 0.94, 0.45, 1.99,
 
                       "Smoking adjustment", "Adjusted", 1.17, 1.1, 1.25,
@@ -715,34 +715,67 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
                       "Continent", "Europe", 1.18, 1.11, 1.25,
                       "Continent", "Asia", 0.94, 0.39, 2.3,
 ) %>% 
-  as.data.frame() 
- # mutate(
- #    group = factor(paste(sub, group, sep = " - "), levels = unique(paste(sub, group, sep = " - ")))
- #  )
-
+  as.data.frame() %>% 
+  mutate(sub = factor(sub, levels = c(
+                                      "Exposure Level",
+                                      "Study design", 
+                                      "Study quality", 
+                                      "Exposure quality", 
+                                      "Smoking adjustment", 
+                                      "Continent")),
+         group = case_when(
+           sub == "Study design" ~ factor(group, levels = c("Cohort", 
+                                                            "Cohort studies with external comparison", 
+                                                            "Cohort studies with internal comparison", 
+                                                            "Case-control", 
+                                                            "Industry-based", 
+                                                            "Population-based")),
+           sub == "Exposure Level" ~ factor(group, levels = c("Low exposure group", 
+                                                              "High exposure group")),
+           sub == "Study quality" ~ factor(group, levels = c("High", 
+                                                             "Moderate", 
+                                                             "Low")),
+           sub == "Exposure quality" ~ factor(group, levels = c("High", 
+                                                                "Moderate", 
+                                                                "Low")),
+           sub == "Smoking adjustment" ~ factor(group, levels = c("Adjusted", 
+                                                                  "Not adjusted")),
+           sub == "Continent" ~ factor(group, levels = c("North America", 
+                                                         "Europe", 
+                                                         "Asia"))
+         ))
 glimpse(sub_result)
 
 
 require(ggforce)
-ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
-  geom_point(size = 3) +  # Points with different shapes
-  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.2) +  # Error bars
-  scale_color_brewer(palette = "Dark2") +  # Colorblind-friendly palette
-  scale_shape_manual(values = c(16, 17, 15, 18, 19, 20)) +  # Assign distinct shapes
-  theme_minimal() +  # Minimal theme for clarity
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate x-axis labels
-  labs( y = "Relative Risk (RR)", title = "Relative Risk by Subgroups with 95% CI") +
-  theme(legend.title = element_blank(), legend.position = "") +
-  geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.3) +
-  # coord_flip() +
-  facet_row(~sub, scales = "free", space = "free")  # Facets based on `sub`, free scales and space
+require(ggsci)
 
+ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
+  geom_point(size = 4.5) +  # Points with distinct shapes
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.3, linewidth = 0.9) +  # Error bars with thicker lines
+  scale_color_manual(values = c("#000000", "#CC79A7", "#56B4E9", "#009E73", "#D55E00", "#0072B2")) +  # Colorblind-friendly palette
+  scale_shape_manual(values = c(15, 16, 17, 18, 19, 20)) +  # Assign distinct shapes
+  theme_minimal(base_size = 14) +  # Minimal theme with increased base font size for readability
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  # Rotate and adjust x-axis labels
+        axis.title.x = element_blank(),  # Remove x-axis title for cleaner look
+        legend.title = element_blank(),  # Remove legend title
+        legend.position = "",  # Position legend at the top
+        # legend.text = element_text(size = 12),  # Increase legend text size
+        panel.grid.minor = element_blank(),
+        panel.spacing = unit(1, "lines"),
+        axis.title.y = element_text(face = "bold"),
+        # axis.text.x.bottom = element_text(size = 15)
+        ) +  # Remove minor grid lines
+  labs(y = "Pooled RR") + 
+  geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.4, color = "gray1") +  # Emphasize reference line
+  facet_wrap(~sub, scales = "free_x", nrow = 1) +  # Facets based on `sub`, with free x-scales and single row layout
+  theme(strip.text.x = element_text(size = 13, face = "bold"))
 
 ```
 
 
 
-
+##3.5 pub bias
 
 
 
