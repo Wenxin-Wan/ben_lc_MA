@@ -773,7 +773,8 @@ ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   labs(y = "Pooled RR") + 
   geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.4, color = "gray1") +  # Emphasize reference line
   facet_wrap(~sub, scales = "free_x", nrow = 1) +  # Facets based on `sub`, with free x-scales and single row layout
-  theme(strip.text.x = element_text(size = 13, face = "bold"))
+  theme(strip.text.x = element_text(size = 13, face = "bold"),
+        axis.text.x = element_text(size = 12))
 
 ```
 
@@ -850,17 +851,17 @@ data_long <- rob_result %>%
     Domain == "D2" ~ "Exposure assessment",
     Domain == "D3" ~ "Outcome assessment",
     Domain == "D4" ~ "Confounding",
-    Domain == "D5" ~ "Follow-up/Participation rate*",
+    Domain == "D5" ~ "Follow-up / Participation rate*",
     Domain == "D6" ~ "Statistical analysis"
   )) %>% 
-  mutate(Domain = factor(Domain, levels = c( "Population inclusion", "Exposure assessment", "Outcome assessment", "Confounding", "Follow-up/Participation rate*", "Statistical analysis"))) %>% 
+  mutate(Domain = factor(Domain, levels = c( "Population inclusion", "Exposure assessment", "Outcome assessment", "Confounding", "Follow-up / Participation rate*", "Statistical analysis"))) %>% 
   mutate(rob = factor(rob, 
                          levels = c("low", "some concern", "high"), 
                          labels = c("Low risk", "Some concern", "High risk"))) %>% 
   mutate(study = factor(study, levels = rev(rob_result$study)))
 
 
-png(filename = "ROB_plot.png", width = 800, height = 500)
+# png(filename = "ROB_plot.png", width = 800, height = 500)
 ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
   geom_tile_pattern(color = "white", size = 0.2, 
                     pattern_density = 0.01, # Adjust the density of the pattern
@@ -877,10 +878,12 @@ ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
        x = "",
        y = "") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.x.bottom  = element_text(face = "bold", size = 13),
+        axis.text.x.bottom  = element_text(face = "bold", size = 11),
         axis.text.y.left = element_text(size = 11),
         legend.text = element_text(size = 9))
-dev.off()
+# dev.off()
+
+
 ```
 
 
