@@ -860,7 +860,7 @@ data_long <- rob_result %>%
   mutate(study = factor(study, levels = rev(rob_result$study)))
 
 
-png(filename = "ROB_plot", width = 800, height = 500)
+png(filename = "ROB_plot.png", width = 800, height = 500)
 ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
   geom_tile_pattern(color = "white", size = 0.2, 
                     pattern_density = 0.01, # Adjust the density of the pattern
