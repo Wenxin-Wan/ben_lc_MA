@@ -635,6 +635,8 @@ subgroup <- c("type", "study_quality", "exposure_quality", "sex", "smoking", "re
 
 dat_ever$region <- ifelse(dat_ever$region == "USA", "North America", dat_ever$region)
 dat_ever$exposure_quality <- ifelse(dat_ever$exposure_quality == "Medium", "Moderate", dat_ever$exposure_quality)
+dat_ever$exposure_quality <- factor(dat_ever$exposure_quality,
+                                 levels = c("High", "Moderate", "Low"))
 
 
 for (i in subgroup) {
