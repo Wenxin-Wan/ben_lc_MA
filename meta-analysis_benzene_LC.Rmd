@@ -634,6 +634,8 @@ glimpse(dat_ever)
 subgroup <- c("type", "study_quality", "exposure_quality", "sex", "smoking", "region")
 
 dat_ever$region <- ifelse(dat_ever$region == "USA", "North America", dat_ever$region)
+dat_ever$exposure_quality <- ifelse(dat_ever$exposure_quality == "Medium", "Moderate", dat_ever$exposure_quality)
+
 
 for (i in subgroup) {
   
