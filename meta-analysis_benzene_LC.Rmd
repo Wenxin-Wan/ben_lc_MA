@@ -87,9 +87,9 @@ mult_grp_dat <- tribble(~study_label, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design
                "Collins_>1-6", 1.3, 1.0, 1.8, 39, "cohort", "industry-based", "Collins et al. (2003)", "external",
                "Collins_>6", 1.6, 1.2, 2.1, 55, "cohort", "industry-based", "Collins et al. (2003)", "external",
 ###
-               "Mattei_low", 1.01, 0.59, 1.71, 108, "case-control", "population-based", "Mattei et al. (2016)",  "internal",
-               "Mattei_medium", 0.86, 0.45, 1.65, 106, "case-control", "population-based", "Mattei et al. (2016)",  "internal",
-               "Mattei_high", 0.95, 0.44, 2.04, 129, "case-control", "population-based", "Mattei et al. (2016)",  "internal",
+               # "Mattei_low", 1.01, 0.59, 1.71, 108, "case-control", "population-based", "Mattei et al. (2016)",  "internal",
+               # "Mattei_medium", 0.86, 0.45, 1.65, 106, "case-control", "population-based", "Mattei et al. (2016)",  "internal",
+               # "Mattei_high", 0.95, 0.44, 2.04, 129, "case-control", "population-based", "Mattei et al. (2016)",  "internal",
 ###
                "Wan_<1", 1.12, 1.03, 1.21, 2190, "case-control", "population-based", "Wan et al. (2023)", "internal",
                "Wan_1-5", 1.17, 1.08, 1.27, 2553, "case-control", "population-based", "Wan et al. (2023)", "internal",
@@ -217,7 +217,7 @@ dat_metareg <- tribble(~study, ~exp, ~RR, ~lower_ci, ~upper_ci, ~case, ~N, ~type
                        "Babigumira et al. (2023)", 0.285, 1.15, 0.61, 2.16, 67, 416, "ci",
                        "Collins et al. (2003)", 0, 1.3, 1.1, 1.5, 126, 224.5, "ci",
                        "Collins et al. (2003)", 0.5, 1.1, 0.70, 1.50, 32, 62, "ci",
-                       "Collins et al. (2003)", 3.5, 1.3, 1.00, 1.80, 39, 68, "ci", 
+                       "Collins et al. (2003)", 3.5, 1.3, 1.00, 1.80, 39, 68, "ci",
                        "Collins et al. (2003)", 10, 1.6, 1.20, 2.10, 55, 89.3, "ci",
                        "Wan et al. (2024)", 0, 1, NA, NA, 6491,  15957, "cc", 
                        "Wan et al. (2024)", 0.5, 1.12, 1.03, 1.21, 2190, 4739, "cc",
@@ -296,6 +296,7 @@ ggplot(dat_metareg, aes(x = exp, y = exp(logrr))) +
     labs(x = "Benzene Exposure (ppm-year)", y = "Relative Risk (RR)", shape = "Study") +
   theme_bw()
 
+summary(fit)
 summary(fit_lin)
 
 ```
