@@ -787,6 +787,35 @@ ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
 
 ##3.5 pub bias
 
+```{r}
+
+# Produce funnel plot
+meta::funnel(ma_ever,
+             # xlim = c(0, 2),
+             studlab = T)
+
+
+
+### contour-enhanced funnel plots
+col.contour = c("gray75", "gray85", "gray95")
+
+# Generate funnel plot (we do not include study labels here)
+meta::funnel(ma_ever,
+             # xlim = c(-0.5, 2),
+             contour = c(0.9, 0.95, 0.99),
+             col.contour = col.contour,
+             xlab = "RR")
+
+# Add a legend
+legend(x = 1.2, y = 0.01, 
+       legend = c("p < 0.1", "p < 0.05", "p < 0.01"), cex = 10, 
+       fill = col.contour)
+
+
+```
+
+
+
 
 
 
