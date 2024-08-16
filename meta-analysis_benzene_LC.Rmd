@@ -814,6 +814,21 @@ legend(x = 1.2, y = 0.01,
 
 ```
 
+we then produce egger's test
+```{r}
+
+
+if (!require("remotes")) {
+  install.packages("remotes")
+}
+remotes::install_github("MathiasHarrer/dmetar")
+
+require(dmetar)
+
+eggers.test(ma_ever)
+
+
+```
 
 
 
