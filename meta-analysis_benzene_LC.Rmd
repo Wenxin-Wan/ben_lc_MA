@@ -141,6 +141,8 @@ dat_ever <- tribble(~study, ~year, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~
                # "Mattei et al. (2016)", 0.95, 0.66, 1.36, 343, "case-control", "population-based", "internal", "case-control", "high", "low", "Europe", "mixed","adjusted",
                "McHugh et al. (2010)", 2010, 1.13, 0.69, 1.86, 38, "Case-control", "population-based", "internal","Case-control", "Moderate", "low", "USA", "mixed","adjusted",
                "Greenland et al. (1994)",1994, 0.58, 0.31, 1.07, -99999, "Case-control", "Industry-based", "internal", "Case-control", "Moderate", "medium", "USA", "only male","not adjusted",
+               "DeMoulin et al. (2024)", 2024, 1, 0.9, 1.2, 221, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "High", "High", "Asia", "only male","adjusted",
+
                ## excluded wong study 
                # "Wong et al (1993)_land", 0.66, 0.57, 0.77, 165, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
                # "Wong et al (1993)_marine", 1.07, 0.94, 1.21, 208, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
