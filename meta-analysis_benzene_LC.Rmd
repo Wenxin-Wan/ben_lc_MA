@@ -118,22 +118,22 @@ forest(ma_collap, xlim = c(0.5,3), pooled.totals = F,  layout = "RevMan5", rando
 ```{r}
 
 dat_ever <- tribble(~study, ~year, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,  ~comp_grp, ~study_type, ~study_quality, ~exposure_quality, ~region, ~sex, ~smoking,
-               "Wong et al. (1987)", 1987, 1.29, 1.00, 1.65, 18, "Cohort", "Industry-based", "external", "Cohort studies with external comparison",  "Moderate",  "Medium", "USA", "only male", "not adjusted",
+               "Wong et al. (1987)", 1987, 1.29, 1.00, 1.65, 18, "Cohort", "Industry-based", "external", "Cohort studies with external comparison",  "Moderate",  "Moderate", "USA", "only male", "not adjusted",
                # for collins (2003), the sum o/e is calculated (252/191.8) to obtain ever_exp estimates
                "Collins et al. (2003)", 2003, 1.31, 1.16, 1.48, 252, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "High", "USA", "mixed", "not adjusted",
                "Sorahan et al. (2005)", 2005, 1.19, 1.06, 1.34, 293, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "low", "Europe", "mixed", "not adjusted",
-               "Hoshuyama et al. (2006)",2006, 1.04, 1.00, 1.08, 11, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "Moderate", "Medium", "Asia", "only male", "not adjusted",
+               "Hoshuyama et al. (2006)",2006, 1.04, 1.00, 1.08, 11, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "Moderate", "Moderate", "Asia", "only male", "not adjusted",
                "Koh et al. (2011)", 2011, 0.35, 0.11, 0.83, 6, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "Low", "Asia", "only male", "not adjusted",
                "Koh et al. (2014)", 2014, 0.73, 0.24, 1.71, 5, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Low", "Low", "Asia", "only male","not adjusted",
                "Linet et al. (2015)",2015, 1.5, 1.2, 1.9, 351, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "High", "High", "Asia", "mixed","not adjusted",
                "Collins et al. (2015)", 2015, 1.05, 0.89, 1.24, 146, "Cohort", "Industry-based", "external", "Cohort studies with external comparison", "Moderate", "High", "USA", "mixed","not adjusted",
                # for Babigumira 2023, fixed-effect MA for three exp categories was used to estimate the ever_exp est.
                "Babigumira et al. (2023)",2023, 1.29, 0.98, 1.71, 292, "Cohort", "Industry-based", "internal", "Cohort studies with internal comparison", "High", "High", "Europe", "only male","adjusted",
-               "Wan et al. (2024)", 2024, 1.17, 1.10, 1.24, 5838, "Case-control", "population-based", "internal",  "Case-control", "high", "medium", "Europe", "mixed","adjusted",
+               "Wan et al. (2024)", 2024, 1.17, 1.10, 1.24, 5838, "Case-control", "population-based", "internal",  "Case-control", "high", "Moderate", "Europe", "mixed","adjusted",
                # for mattei 2016, fixed-effect MA for three exp categories was used to estimate the ever_exp est.
                # "Mattei et al. (2016)", 0.95, 0.66, 1.36, 343, "case-control", "population-based", "internal", "case-control", "high", "low", "Europe", "mixed","adjusted",
                "McHugh et al. (2010)", 2010, 1.13, 0.69, 1.86, 38, "Case-control", "population-based", "internal","Case-control", "Moderate", "low", "USA", "mixed","adjusted",
-               "Greenland et al. (1994)",1994, 0.58, 0.31, 1.07, -99999, "Case-control", "Industry-based", "internal", "Case-control", "Moderate", "medium", "USA", "only male","not adjusted",
+               "Greenland et al. (1994)",1994, 0.58, 0.31, 1.07, -99999, "Case-control", "Industry-based", "internal", "Case-control", "Moderate", "Moderate", "USA", "only male","not adjusted",
                "DeMoulin et al. (2024)", 2024, 1, 0.9, 1.2, 221, "Cohort", "population-based", "internal", "Cohort studies with internal comparison", "High", "High", "Asia", "only male","adjusted",
 
                ## excluded wong study 
@@ -147,7 +147,7 @@ dat_ever$study_quality <- factor(dat_ever$study_quality,
                                  levels = c("High", "Moderate", "Low"))
 
 dat_ever$exposure_quality <- factor(dat_ever$exposure_quality,
-                                 levels = c("High", "Medium", "Low"))
+                                 levels = c("High", "Moderate", "Low"))
 
 
 order_dat <- dat_ever[order(dat_ever$year),]
@@ -330,7 +330,7 @@ dat_incl_syn <- dat_ever %>%
                 )) %>% 
   filter(!study == "Wan et al. (2024)")
 
-dat_incl_syn$study[12:31] <- paste0("SYNERGY-", dat_incl_syn$study[12:31])
+dat_incl_syn$study[13:32] <- paste0("SYNERGY-", dat_incl_syn$study[13:32])
 
 
 
@@ -514,7 +514,8 @@ dat_low <- tribble(~study, ~year, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~t
                "Wan et al. (2024): low exposure",2024, 1.12, 1.03, 1.21, 12329, "case-control", "population-based",
                # "Mattei et al. (2016)_low", 1.01, 0.59, 1.71, 129, "case-control", "population-based",
                "McHugh et al. (2010)",2010,  1.13, 0.69, 1.86, 38, "case-control", "population-based",
-               "Greenland et al. (1994)", 1994, 0.58, 0.31, 1.07, -99999, "case-control", "industry-based")
+               "Greenland et al. (1994)", 1994, 0.58, 0.31, 1.07, -99999, "case-control", "industry-based",
+                "DeMoulin et al. (2024): low exposure", 2024, 1.0, 0.8, 1.3, 109, "cohort", "population-based")
 
 dat_low <- dat_low[order(dat_low$year),]
 
@@ -574,7 +575,10 @@ dat_high <- tribble(~study, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,
                "Wan et al. (2024): high exposure group", 1.32, 1.18, 1.48, 12329, "case-control", "population-based",
                # "Mattei et al. (2016)", 0.95, 0.44, 2.04, 129, "case-control", "population-based",
                "McHugh et al. (2010)", 1.13, 0.69, 1.86, 38, "case-control", "population-based",
-               "Greenland et al. (1994)", 0.58, 0.31, 1.07, -99999, "case-control", "industry-based") %>% 
+               "Greenland et al. (1994)", 0.58, 0.31, 1.07, -99999, "case-control", "industry-based",
+               "DeMoulin et al. (2024): high exposure group", 1.5, 1.1, 2, 39, "cohort", "population-based"
+
+               ) %>% 
   as.data.frame() %>% 
   cbind(dat_ever$year) %>% 
   rename(year = colnames(dat_high)[8])
@@ -633,9 +637,6 @@ glimpse(dat_ever)
 subgroup <- c("type", "study_quality", "exposure_quality", "sex", "smoking", "region")
 
 dat_ever$region <- ifelse(dat_ever$region == "USA", "North America", dat_ever$region)
-dat_ever$exposure_quality <- ifelse(dat_ever$exposure_quality == "Medium", "Moderate", dat_ever$exposure_quality)
-dat_ever$exposure_quality <- factor(dat_ever$exposure_quality,
-                                 levels = c("High", "Moderate", "Low"))
 
 
 for (i in subgroup) {
@@ -850,6 +851,7 @@ rob_result <- tribble(
   "Linet et al. (2015)",        3, 2, 3, 1, 2, 2,
   "Collins et al. (2015)",      1, 2, 2, 1, 2, 1,
   "Babigumira et al. (2023)",   3, 2, 4, 2, 2, 2,
+  "DeMoulin et al. (2024)",     3, 2, 4, 2, 2, 2,
   "Greenland et al. (1994)*",   3, 1, 3, 0, 2, 1,
   "McHugh et al. (2010)*",      3, 0, 3, 1, 0, 1,
   "Wan et al. (2024)*",         2, 1, 4, 2, 0, 2
@@ -909,7 +911,7 @@ data_long <- rob_result %>%
   mutate(study = factor(study, levels = rev(rob_result$study)))
 
 
-# png(filename = "ROB_plot.png", width = 800, height = 500)
+pdf(file = "ROB_plot.pdf", width = 11, height = 7)
 ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
   geom_tile_pattern(color = "white", size = 0.2, 
                     pattern_density = 0.01, # Adjust the density of the pattern
@@ -925,11 +927,11 @@ ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
   labs(
        x = "",
        y = "") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
         axis.text.x.bottom  = element_text(face = "bold", size = 11),
         axis.text.y.left = element_text(size = 11),
         legend.text = element_text(size = 9))
-# dev.off()
+dev.off()
 
 
 ```
