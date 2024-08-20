@@ -700,30 +700,34 @@ dev.off()
 ```{r}
 
 sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
-                      "Study design", "Cohort (n=9)", 1.18, 1.02, 1.36,
+                      "Study design", "Cohort (n=10)", 1.15, 1.01, 1.32,
                       "Study design", "Cohort studies with external comparison (n=6)", 1.18, 0.99, 1.42,
-                      "Study design", "Cohort studies with internal comparison (n=3)", 1.23, 0.76, 1.99,
+                      "Study design", "Cohort studies with internal comparison (n=4)", 1.16, 0.86, 1.56,
                       "Study design", "Case-control (n=3)", 1.00, 0.43, 2.35,
                       "Study design", "Industry-based (n=10)", 1.16, 0.99, 1.36,
-                      "Study design", "Population-based (n=2)", 1.17, 1.11, 1.23,
+                      "Study design", "Population-based (n=3)", 1.10, 0.88, 1.38,
                       
-                      "Exposure Level", "Low exposure group", 1.12, 1, 1.26,
-                      "Exposure Level", "High exposure group", 1.19, 1.05, 1.36,
+                      "Exposure Level", "Low exposure group", 1.11, 1, 1.23,
+                      "Exposure Level", "High exposure group", 1.21, 1.07, 1.37,
                       
-                      "Study quality", "High (n=3)", 1.27, 0.93, 1.75,
+                      "Study quality", "High (n=4)", 1.20, 0.92, 1.56,
                       "Study quality", "Moderate (n=8)", 1.12, 0.95, 1.32,
                       "Study quality", "Low (n=1)", 0.73, 0.24, 1.71,
                       
-                      "Exposure quality", "High (n=4)", 1.26, 1, 1.6,
+                      "Exposure quality", "High (n=5)", 1.2, 0.97, 1.48,
                       "Exposure quality", "Moderate (n=4)", 1.1, 0.86, 1.42,
                       "Exposure quality", "Low (n=4)", 0.94, 0.45, 1.99,
 
-                      "Smoking adjustment", "Adjusted (n=3)", 1.17, 1.1, 1.25,
+                      "Smoking adjustment", "Adjusted (n=4)", 1.13, 0.96, 1.32,
                       "Smoking adjustment", "Not adjusted (n=9)", 1.14, 0.95, 1.38,
                       
                       "Continent", "North America (n=5)", 1.15, 0.88, 1.51,
                       "Continent", "Europe (n=3)", 1.18, 1.11, 1.25,
-                      "Continent", "Asia (n=4)", 0.94, 0.39, 2.3,
+                      "Continent", "Asia (n=5)", 1.04, 0.65, 1.66,
+                      
+                      "Sex", "Only male (n=7)", 1.04, 0.97, 1.12,
+                      "Sex", "Mixed (n=6)", 1.21, 1.09, 1.34,
+                      
 ) %>% 
   as.data.frame() %>% 
   mutate(sub = factor(sub, levels = c(
@@ -731,39 +735,42 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
                                       "Study design", 
                                       "Study quality", 
                                       "Exposure quality", 
-                                      "Smoking adjustment", 
+                                      "Smoking adjustment",
+                                      "Sex",
                                       "Continent")),
          group = case_when(
-           sub == "Study design" ~ factor(group, levels = c("Cohort (n=9)", 
+           sub == "Study design" ~ factor(group, levels = c("Cohort (n=10)", 
                                                             "Cohort studies with external comparison (n=6)", 
-                                                            "Cohort studies with internal comparison (n=3)", 
+                                                            "Cohort studies with internal comparison (n=4)", 
                                                             "Case-control (n=3)", 
                                                             "Industry-based (n=10)", 
-                                                            "Population-based (n=2)")),
+                                                            "Population-based (n=3)")),
            sub == "Exposure Level" ~ factor(group, levels = c("Low exposure group", 
                                                               "High exposure group")),
-           sub == "Study quality" ~ factor(group, levels = c("High (n=3)", 
+           sub == "Study quality" ~ factor(group, levels = c("High (n=4)", 
                                                              "Moderate (n=8)", 
                                                              "Low (n=1)")),
-           sub == "Exposure quality" ~ factor(group, levels = c("High (n=4)", 
+           sub == "Exposure quality" ~ factor(group, levels = c("High (n=5)", 
                                                                 "Moderate (n=4)", 
                                                                 "Low (n=4)")),
-           sub == "Smoking adjustment" ~ factor(group, levels = c("Adjusted (n=3)", 
+           sub == "Smoking adjustment" ~ factor(group, levels = c("Adjusted (n=4)", 
                                                                   "Not adjusted (n=9)")),
            sub == "Continent" ~ factor(group, levels = c("North America (n=5)", 
                                                          "Europe (n=3)", 
-                                                         "Asia (n=4)"))
+                                                         "Asia (n=5)")),
+           sub == "Sex" ~ factor(group, levels = c("Only male (n=7)", 
+                                                         "Mixed (n=6)"))
          ))
 glimpse(sub_result)
 
 
 
-
+pdf(file = "subplot.pdf", width = 15, height = 6)
 ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   geom_point(size = 4.5) +  # Points with distinct shapes
   geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.3, linewidth = 0.9) +  # Error bars with thicker lines
-  scale_color_manual(values = c("#000000", "#CC79A7", "#56B4E9", "#009E73", "#D55E00", "#0072B2")) +  # Colorblind-friendly palette
-  scale_shape_manual(values = c(15, 16, 17, 18, 19, 20)) +  # Assign distinct shapes
+  scale_color_manual(values = c("#000000", "#CC79A7", "#56B4E9", "#009E73", "#D55E00", "#0072B2", "#F5C710")) +  # Colorblind-friendly palette
+  scale_shape_manual(values = c(15, 16, 17, 18, 19, 20, 21)) +  # Assign distinct shapes
   theme_minimal(base_size = 14) +  # Minimal theme with increased base font size for readability
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  # Rotate and adjust x-axis labels
         axis.title.x = element_blank(),  # Remove x-axis title for cleaner look
@@ -778,8 +785,9 @@ ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   labs(y = "Pooled RR") + 
   geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.4, color = "gray1") +  # Emphasize reference line
   facet_wrap(~sub, scales = "free_x", nrow = 1) +  # Facets based on `sub`, with free x-scales and single row layout
-  theme(strip.text.x = element_text(size = 13, face = "bold"),
-        axis.text.x = element_text(size = 12))
+  theme(strip.text.x = element_text(size = 14, face = "bold"),
+        axis.text.x = element_text(size = 13.4))
+
 
 ```
 
