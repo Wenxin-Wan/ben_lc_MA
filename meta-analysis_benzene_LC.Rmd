@@ -815,8 +815,9 @@ meta::funnel(ma_ever,
              xlab = "RR")
 
 # Add a legend
-legend(x = 1.2, y = 0.01, 
-       legend = c("p < 0.1", "p < 0.05", "p < 0.01"), cex = 10, 
+legend(x = 2, y = 0.02, 
+       legend = c("p < 0.1", "p < 0.05", "p < 0.01"), 
+       cex = 0.8, 
        fill = col.contour)
 
 
@@ -837,10 +838,6 @@ eggers.test(ma_ever)
 
 
 ```
-
-
-
-
 
 
 #4. ROB score visulisation
