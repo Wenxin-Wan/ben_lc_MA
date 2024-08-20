@@ -718,8 +718,8 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
                       "Exposure quality", "Moderate (n=4)", 1.1, 0.86, 1.42,
                       "Exposure quality", "Low (n=4)", 0.94, 0.45, 1.99,
 
-                      "Smoking adjustment", "Adjusted (n=4)", 1.13, 0.96, 1.32,
-                      "Smoking adjustment", "Not adjusted (n=9)", 1.14, 0.95, 1.38,
+                      "Smoking", "Adjusted (n=4)", 1.13, 0.96, 1.32,
+                      "Smoking", "Not adjusted (n=9)", 1.14, 0.95, 1.38,
                       
                       "Continent", "North America (n=5)", 1.15, 0.88, 1.51,
                       "Continent", "Europe (n=3)", 1.18, 1.11, 1.25,
@@ -735,7 +735,7 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
                                       "Study design", 
                                       "Study quality", 
                                       "Exposure quality", 
-                                      "Smoking adjustment",
+                                      "Smoking",
                                       "Sex",
                                       "Continent")),
          group = case_when(
@@ -753,7 +753,7 @@ sub_result <- tribble(~sub, ~group, ~rr, ~lower_ci, ~upper_ci,
            sub == "Exposure quality" ~ factor(group, levels = c("High (n=5)", 
                                                                 "Moderate (n=4)", 
                                                                 "Low (n=4)")),
-           sub == "Smoking adjustment" ~ factor(group, levels = c("Adjusted (n=4)", 
+           sub == "Smoking" ~ factor(group, levels = c("Adjusted (n=4)", 
                                                                   "Not adjusted (n=9)")),
            sub == "Continent" ~ factor(group, levels = c("North America (n=5)", 
                                                          "Europe (n=3)", 
@@ -770,7 +770,7 @@ ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   geom_point(size = 4.5) +  # Points with distinct shapes
   geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.3, linewidth = 0.9) +  # Error bars with thicker lines
   scale_color_manual(values = c("#000000", "#CC79A7", "#56B4E9", "#009E73", "#D55E00", "#0072B2", "#F5C710")) +  # Colorblind-friendly palette
-  scale_shape_manual(values = c(15, 16, 17, 18, 19, 20, 21)) +  # Assign distinct shapes
+  scale_shape_manual(values = c(15, 16, 17, 18, 19, 20, 15)) +  # Assign distinct shapes
   theme_minimal(base_size = 14) +  # Minimal theme with increased base font size for readability
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  # Rotate and adjust x-axis labels
         axis.title.x = element_blank(),  # Remove x-axis title for cleaner look
