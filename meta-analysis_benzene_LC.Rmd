@@ -241,7 +241,7 @@ fit <- dosresmeta(formula = logrr ~ rcs(exp, knots),
                   n = N,
                   covariance = "gl", # specify the use of Greenland and Longnecker method
                   method = "reml", #  random-effects models fitted through (restricted) maximum likelihood
-                  data = dat_metareg
+                  data = dat_metareg, proc = "1stage"
                   )
 
 fit_lin <- dosresmeta(formula = logrr ~ exp,
@@ -252,11 +252,11 @@ fit_lin <- dosresmeta(formula = logrr ~ exp,
                   n = N,
                   covariance = "gl", # specify the use of Greenland and Longnecker method
                   method = "reml", #  random-effects models fitted through (restricted) maximum likelihood
-                  data = dat_metareg,
+                  data = dat_metareg, proc = "1stage"
                   )
+summary(fit)
+summary(fit_lin)
 
-# summary(fit)
-# 
 newdata <- data.frame(exp <- seq(0, 10.2, 0.01))
 # 
 # newdata$study = "Babigumira et al. (2023)"
@@ -294,8 +294,38 @@ ggplot(dat_metareg, aes(x = exp, y = exp(logrr))) +
     labs(x = "Benzene Exposure (ppm-year)", y = "Relative Risk (RR)", shape = "Study") +
   theme_bw()
 
+
+
+```
+
+additional meta-reg analysis to obtain model fit based on the ML method
+```{r}
+
+fit <- dosresmeta(formula = logrr ~ rcs(exp, knots), 
+                  se = se,
+                  id = study, 
+                  type = type,
+                  cases = case,
+                  n = N,
+                  covariance = "gl", # specify the use of Greenland and Longnecker method
+                  method = "ml", #  random-effects models fitted through (restricted) maximum likelihood
+                  data = dat_metareg, intercept = F, proc = "1stage",
+                  )
+
+fit_lin <- dosresmeta(formula = logrr ~ exp,
+                  se = se,
+                  id = study,
+                  type = type,
+                  cases = case,
+                  n = N,
+                  covariance = "gl", # specify the use of Greenland and Longnecker method
+                  method = "ml", #  random-effects models fitted through (restricted) maximum likelihood
+                  data = dat_metareg,intercept = F, proc = "1stage",
+                  )
+
 summary(fit)
 summary(fit_lin)
+
 
 ```
 
@@ -1015,4 +1045,75 @@ legancy chunks below, DO NOT RUN.
 
 
 ##########################################################################
+
+
+using one knot and test the res curve shows no difference
+```{r}
+
+knots_new <- quantile(dat_metareg$exp,  0.5)
+require(splines)
+fit <- dosresmeta(formula = logrr ~ ns(exp, knots = knots_new), 
+                  se = se,
+                  id = study, 
+                  type = type,
+                  cases = case,
+                  n = N,
+                  covariance = "gl", # specify the use of Greenland and Longnecker method
+                  method = "reml", #  random-effects models fitted through (restricted) maximum likelihood
+                  data = dat_metareg, intercept = F, proc = "1stage",
+                  )
+summary(fit)
+
+fit_lin_1st <- dosresmeta(formula = logrr ~ exp,
+                  se = se,
+                  id = study,
+                  type = type,
+                  cases = case,
+                  n = N,
+                  covariance = "gl", # specify the use of Greenland and Longnecker method
+                  method = "reml", #  random-effects models fitted through (restricted) maximum likelihood
+                  data = dat_metareg,intercept = F, proc = "1stage",
+                  )
+summary(fit_lin_1st)
+
+
+pred_val <- predict(fit, newdata = newdata, expo = T) # transform back to original RR scale
+require(ggsci)
+newdata <- data.frame(exp <- seq(0, 10.2, 0.01)) 
+colnames(newdata)[1] <- "exp"
+
+pred_val <- cbind(newdata, pred_val)
+
+# Plot the data with error bars, log-linear fit, and SE
+ggplot(dat_metareg, aes(x = exp, y = exp(logrr))) +
+  geom_point(aes(shape = study), size = 2.5, show.legend = T) +
+  scale_color_bmj()+
+  # scale_color_manual(values = c("red", "blue", "black"))  +
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.1) +
+  geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.3) +
+  geom_line(data = pred_val, aes(x = exp, y = pred), color = "blue") +
+  geom_ribbon(data = pred_val, aes(x = exp, ymin = ci.lb, ymax = ci.ub, y = pred), alpha = 0.1) +
+    labs(x = "Benzene Exposure (ppm-year)", y = "Relative Risk (RR)", shape = "Study") +
+  theme_bw()
+
+
+
+# for linear fit
+pred_val_lin <- predict(fit_lin_1st, newdata = newdata, expo = T) # transform back to original RR scale
+
+ggplot(dat_metareg, aes(x = exp, y = exp(logrr))) +
+  geom_point(aes(shape = study), size = 2.5, show.legend = T) +
+  scale_color_bmj()+
+  # scale_color_manual(values = c("red", "blue", "black"))  +
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.1) +
+  geom_hline(yintercept = 1, linetype = "dashed", linewidth = 0.3) +
+  geom_line(data = pred_val_lin, aes(x = exp, y = pred), color = "blue") +
+  geom_ribbon(data = pred_val_lin, aes(x = exp, ymin = ci.lb, ymax = ci.ub, y = pred), alpha = 0.1) +
+    labs(x = "Benzene Exposure (ppm-year)", y = "Relative Risk (RR)", shape = "Study") +
+  theme_bw()
+
+
+
+```
+
 
