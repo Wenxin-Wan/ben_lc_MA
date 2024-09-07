@@ -164,7 +164,7 @@ ma_ever <- metagen(data = order_dat,
                    # subgroup = study_type #vary this so various stratification can be made
                    )
 # ma_ever$studlab <- "Study"
-
+pdf(file = "Figure 3.pdf", width = 10, height = 6)
 forest(ma_ever,
        xlim = c(0.8,2), 
        pooled.totals = T,  
@@ -187,7 +187,7 @@ forest(ma_ever,
        digits.TE = 2,
        leftcols = c("studlab", "seTE"),
        just = "left")
-
+dev.off()
 
 summary(ma_ever)
 
@@ -794,7 +794,7 @@ glimpse(sub_result)
 
 
 
-pdf(file = "subplot.pdf", width = 15, height = 7)
+pdf(file = "Figure 5.pdf", width = 15, height = 7)
 ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   geom_point(size = 4.5) +  # Points with distinct shapes
   geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.3, linewidth = 0.9) +  # Error bars with thicker lines
@@ -816,7 +816,7 @@ ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
   facet_wrap(~sub, scales = "free_x", nrow = 1) +  # Facets based on `sub`, with free x-scales and single row layout
   theme(strip.text.x = element_text(size = 14, face = "bold"),
         axis.text.x = element_text(size = 13.4))
-
+dev.off()
 
 ```
 
