@@ -796,6 +796,7 @@ glimpse(sub_result)
 
 pdf(file = "Figure 5.pdf", width = 15, height = 7)
 ggplot(sub_result, aes(x = group, y = rr, color = sub, shape = sub)) +
+  scale_y_continuous(trans = "log10", limits = c(0.24, 2.35), breaks = c(0.3, 0.5, 1, 1.5, 2)) +
   geom_point(size = 4.5) +  # Points with distinct shapes
   geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.3, linewidth = 0.9) +  # Error bars with thicker lines
   scale_color_manual(values = c("#000000", "#CC79A7", "#56B4E9", "#009E73", "#D55E00", "#0072B2", "#F5C710")) +  # Colorblind-friendly palette
