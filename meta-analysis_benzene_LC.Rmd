@@ -946,9 +946,9 @@ data_long <- rob_result %>%
   mutate(study = factor(study, levels = rev(rob_result$study)))
 
 
-pdf(file = "ROB_plot.pdf", width = 11, height = 7)
+pdf(file = "ROB_plot.pdf", width = 7, height = 5)
 ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
-  geom_tile_pattern(color = "white", size = 0.2, 
+  geom_tile_pattern(color = "white", size = 0.2,
                     pattern_density = 0.01, # Adjust the density of the pattern
                     pattern_fill = "black", # Color of the pattern lines
                     pattern_spacing = 0.05) + # Spacing between pattern lines
@@ -963,14 +963,13 @@ ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
        x = "",
        y = "") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-        axis.text.x.bottom  = element_text(face = "bold", size = 11),
-        axis.text.y.left = element_text(size = 11),
-        legend.text = element_text(size = 9))
+        axis.text.x.bottom  = element_text(face = "bold", size = 10),
+        axis.text.y.left = element_text(size = 9),
+        legend.text = element_text(size = 8))
 dev.off()
 
 
 ```
-
 
 
 
