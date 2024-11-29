@@ -4,32 +4,42 @@ output:
   html_document:
     df_print: paged
   pdf_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ##################### 
 
-**Any question? email w.wan@uu.nl or charleswanwen@gmail.com**
+**Any question? email [w.wan\@uu.nl](mailto:w.wan@uu.nl){.email} or
+[charleswanwen\@gmail.com](mailto:charleswanwen@gmail.com){.email}**
 
-#####################
+##################### 
 
+This script follows the systematic search of papers on the effect of
+occupational benzene exposure on lung cancer up till 2024, and stands
+for the formal meta-analysis (MA) of the risk estimates extracted from
+these studies. Details for the data extracted and the screening process
+are recorded in the associated paper. The main structure of the
+following codes follows:
 
-This script follows the systematic search of papers on the effect of occupational benzene exposure on lung cancer up till 2024, and stands for the formal meta-analysis (MA) of the risk estimates extracted from these studies. Details for the data extracted and the screening process are recorded in the associated paper. The main structure of the following codes follows:
-
-
-1. for studies only reported exposure within several exposure categories without reporting ever-exposure effect, collapse risk estimates with fixed-effect MA
-2. ever exposure MA [main analysis, fig 2]
-3. do various sensitivity analyses:
-  3.1 Meta-regression over three studies that reported original benzene exposure scales (with ref to https://ehp.niehs.nih.gov/doi/10.1289/ehp.1306880)
-  3.2 break-up pooled studies from Wan et al. (2024) and include these as individual studies to be included with other studies for MA on ever-exposure
-  3.3 do various subgroup analyses 
-    3.3.1 effect sizes from highest vs. lowest exposure category used
-    3.3.2 overall quality (low, moderate, high)
-    3.3.3 exposure assessment quality (low, medium, high)
-    3.3.4 whether smoking was adjusted
-    3.3.5 stratify by continent
-  3.4 combine all results from 3.3 to produce one figure (fig 3)  
-  3.5 pub bias
-4. ROB assessment scores (visualisation of)  
+1.  for studies only reported exposure within several exposure
+    categories without reporting ever-exposure effect, collapse risk
+    estimates with fixed-effect MA
+2.  ever exposure MA [main analysis, fig 2]
+3.  do various sensitivity analyses: 3.1 Meta-regression over three
+    studies that reported original benzene exposure scales (with ref to
+    <https://ehp.niehs.nih.gov/doi/10.1289/ehp.1306880>) 3.2 break-up
+    pooled studies from Wan et al. (2024) and include these as
+    individual studies to be included with other studies for MA on
+    ever-exposure 3.3 do various subgroup analyses 3.3.1 effect sizes
+    from highest vs. lowest exposure category used 3.3.2 overall quality
+    (low, moderate, high) 3.3.3 exposure assessment quality (low,
+    medium, high) 3.3.4 whether smoking was adjusted 3.3.5 stratify by
+    continent 3.4 combine all results from 3.3 to produce one figure
+    (fig 3)\
+    3.5 pub bias
+4.  ROB assessment scores (visualisation of)
 
 ```{r load packages, include=FALSE}
 
@@ -52,18 +62,17 @@ require(ggsci)
 
 ```
 
-
-
-#1. calculate the ever-exposure estimates from studies with multiple exposure categories group that did not report
+#1. calculate the ever-exposure estimates from studies with multiple
+exposure categories group that did not report
 
 For the following studies:
 
-- Babigumira et al. (2023)
-- Collins et al. (2003)
-- Mattei et al. (2016)
+-   Babigumira et al. (2023)
+-   Collins et al. (2003)
+-   Mattei et al. (2016)
 
-please note for Koh et al. (2011)_///note: not to be pooled, estimates of all workers will be used instead.
-
+please note for Koh et al. (2011)\_///note: not to be pooled, estimates
+of all workers will be used instead.
 
 ```{r}
 
@@ -110,9 +119,7 @@ forest(ma_collap, xlim = c(0.5,3), pooled.totals = F,  layout = "RevMan5", rando
 
 ```
 
-
 #2. ever exposure MA [main analysis, fig 2]
-
 
 ```{r}
 
@@ -140,7 +147,7 @@ dat_ever <- tribble(~study, ~year, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~
                # "Wong et al (1993)_marine", 1.07, 0.94, 1.21, 208, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
                # "Wong et al (1993)_calculated_combined", 0.8394, 0.7574, 0.9279, 373, "cohort", "industry-based", "external", "cohort study with external comparison", "x", "x", "x", "men", "not adjusted",
                ) %>% 
-    mutate(across(7:15, ~ str_replace(., "^.", toupper)))
+    mutate(across(7:15, ~ str_replace(., "^.", toupper))) 
 
 dat_ever$study_quality <- factor(dat_ever$study_quality,
                                  levels = c("High", "Moderate", "Low"))
@@ -151,32 +158,51 @@ dat_ever$exposure_quality <- factor(dat_ever$exposure_quality,
 
 order_dat <- dat_ever[order(dat_ever$year),]
 
-ma_ever <- metagen(data = order_dat,
-                   TE = log(order_dat$rr),
-                   studlab = study,
-                   sm = "RR",
-                   fixed = F, 
-                   random = T,
-                   method.tau = "REML",
-                   lower = log(order_dat$lower_ci),
-                   upper = log(order_dat$upper_ci),
-                   hakn = TRUE
-                   # subgroup = study_type #vary this so various stratification can be made
-                   )
-# ma_ever$studlab <- "Study"
-pdf(file = "Figure 3.pdf", width = 10, height = 6)
+
+# Forest plot with updated labels
+
+order_dat <- order_dat %>% 
+  mutate(custom_study_labels = c(
+"Wong et al. (1987)⁵¹", 
+"Greenland et al. (1994)⁵⁶", 
+"Collins et al. (2003)³⁶",
+"Sorahan et al. (2005)⁵⁴", 
+"Hoshuyama et al. (2006)⁵⁵", 
+"McHugh et al. (2010)⁵⁷",
+"Koh et al. (2011)⁵²", 
+"Koh et al. (2014)⁵³",
+"Linet et al. (2015)⁴⁸", 
+"Collins et al. (2015)⁴³", 
+"Babigumira et al. (2023)⁷", 
+"Wan et al. (2024)⁶", 
+"DeMoulin et al. (2024)⁵"
+  ))
+
+
+
+# Re-run the meta-analysis
+ma_ever <- metagen(
+  data = order_dat,
+  TE = log(order_dat$rr),
+  studlab = custom_study_labels,
+  sm = "RR",
+  fixed = F,
+  random = T,
+  method.tau = "REML",
+  lower = log(order_dat$lower_ci),
+  upper = log(order_dat$upper_ci),
+  hakn = T)
+
+
+# png(file = "Figure 3.png", width = 900, height = 600)
 forest(ma_ever,
-       xlim = c(0.8,2), 
-       pooled.totals = T,  
-       # layout = "BMJ",
+       xlim = c(0.8, 2), 
+       pooled.totals = T,
        random = T,
        weight.study = "random", 
-       common = F, 
-       # subgroup = F,     
-       # col.subgroup = "black", # Set subgroup label color to black
-       # font.subgroup = 2, # Set font style to bold for subgroup labels
-       cex = 1.2, # Increase text size for readability
-       col.diamond = "blue", # Use high contrast color
+       common = F,
+       cex = 1.2,
+       col.diamond = "blue",
        col.square = "darkgreen", 
        col.inside = "black", 
        col.study = "black",
@@ -186,37 +212,39 @@ forest(ma_ever,
        digits.se = 2, 
        digits.TE = 2,
        leftcols = c("studlab", "seTE"),
-       just = "left")
-dev.off()
-
-summary(ma_ever)
+       just = "left", 
+       rightlabs = c("RR", "95% CI", "Weight")
+       # studlab = custom_study_labels # Use custom labels
+       )
+# dev.off()
 
 
 ```
 
-
 #3. do various sensitivity analyses:
 
-##3.1 Meta-regression over studies that reported original benzene exposure scales
+##3.1 Meta-regression over studies that reported original benzene
+exposure scales
 
-mid-point was used to except for the highest exp category, where 5/3 * lower bound will be used.
+mid-point was used to except for the highest exp category, where 5/3 \*
+lower bound will be used.
 
 ```{r}
 
 dat_metareg <- tribble(~study, ~exp, ~RR, ~lower_ci, ~upper_ci, ~case, ~N, ~type,
-                       "Babigumira et al. (2023)", 0, 1, NA, NA,  112, 767, "ci",
-                       "Babigumira et al. (2023)", 0.008, 1.47, 0.90, 2.40,  85, 417, "ci",
-                       "Babigumira et al. (2023)", 0.042, 1.30, 0.75, 2.26,  72, 417, "ci",
-                       "Babigumira et al. (2023)", 0.120, 1.18, 0.64, 2.15, 63, 417, "ci",
-                       "Babigumira et al. (2023)", 0.285, 1.15, 0.61, 2.16, 67, 416, "ci",
-                       "Collins et al. (2003)", 0, 1.3, 1.1, 1.5, 126, 224.5, "ci",
-                       "Collins et al. (2003)", 0.5, 1.1, 0.70, 1.50, 32, 62, "ci",
-                       "Collins et al. (2003)", 3.5, 1.3, 1.00, 1.80, 39, 68, "ci",
-                       "Collins et al. (2003)", 10, 1.6, 1.20, 2.10, 55, 89.3, "ci",
-                       "Wan et al. (2024)", 0, 1, NA, NA, 6491,  15957, "cc", 
-                       "Wan et al. (2024)", 0.5, 1.12, 1.03, 1.21, 2190, 4739, "cc",
-                       "Wan et al. (2024)", 3, 1.17,  1.08, 1.27, 2553, 5251, "cc",
-                       "Wan et al. (2024)", 8.3, 1.32, 1.18, 1.48, 1095, 2101, "cc",
+                       "Babigumira et al. (2023)⁷", 0, 1, NA, NA,  112, 767, "ci",
+                       "Babigumira et al. (2023)⁷", 0.008, 1.47, 0.90, 2.40,  85, 417, "ci",
+                       "Babigumira et al. (2023)⁷", 0.042, 1.30, 0.75, 2.26,  72, 417, "ci",
+                       "Babigumira et al. (2023)⁷", 0.120, 1.18, 0.64, 2.15, 63, 417, "ci",
+                       "Babigumira et al. (2023)⁷", 0.285, 1.15, 0.61, 2.16, 67, 416, "ci",
+                       "Collins et al. (2003)³⁶", 0, 1.3, 1.1, 1.5, 126, 224.5, "ci",
+                       "Collins et al. (2003)³⁶", 0.5, 1.1, 0.70, 1.50, 32, 62, "ci",
+                       "Collins et al. (2003)³⁶", 3.5, 1.3, 1.00, 1.80, 39, 68, "ci",
+                       "Collins et al. (2003)³⁶", 10, 1.6, 1.20, 2.10, 55, 89.3, "ci",
+                       "Wan et al. (2024)⁶", 0, 1, NA, NA, 6491,  15957, "cc", 
+                       "Wan et al. (2024)⁶", 0.5, 1.12, 1.03, 1.21, 2190, 4739, "cc",
+                       "Wan et al. (2024)⁶", 3, 1.17,  1.08, 1.27, 2553, 5251, "cc",
+                       "Wan et al. (2024)⁶", 8.3, 1.32, 1.18, 1.48, 1095, 2101, "cc",
                        # "DeMoulin et al. (2024)", 0, 1.0, NA, NA, 924, 48336, "ci",
                        # "DeMoulin et al. (2024)", 31.15, 1.0, 0.8, 1.3, 109, 6600, "ci",
                        # "DeMoulin et al. (2024)", 117, 0.8, 0.6, 1.0, 44, 3970, "ci",
@@ -224,7 +252,10 @@ dat_metareg <- tribble(~study, ~exp, ~RR, ~lower_ci, ~upper_ci, ~case, ~N, ~type
 ) %>% 
   mutate(logrr = log(RR)) %>% 
   mutate(se = log(upper_ci) - log(lower_ci) / (2 * 1.96)) %>% 
-  mutate(se = if_else(exp == 0, NA, se)) # this makes the control group se == 0, for the calculation of cov matrix
+  mutate(se = if_else(exp == 0, NA, se))  # this makes the control group se == 0, for the calculation of cov matrix
+
+
+
 
 head(dat_metareg)
 
@@ -293,12 +324,14 @@ ggplot(dat_metareg, aes(x = exp, y = exp(logrr))) +
   geom_ribbon(data = pred_val_lin, aes(x = exp, ymin = ci.lb, ymax = ci.ub, y = pred), alpha = 0.1) +
     labs(x = "Benzene Exposure (ppm-year)", y = "Relative Risk (RR)", shape = "Study") +
   theme_bw()
+ggsave("figure4.png", width = 8,  height = 5)
 
 
 
 ```
 
 additional meta-reg analysis to obtain model fit based on the ML method
+
 ```{r}
 
 fit <- dosresmeta(formula = logrr ~ rcs(exp, knots), 
@@ -329,7 +362,9 @@ summary(fit_lin)
 
 ```
 
-##3.2 break-up pooled studies from Wan et al. (2024) and include these as individual studies to be included with other studies for MA on ever-exposure
+##3.2 break-up pooled studies from Wan et al. (2024) and include these
+as individual studies to be included with other studies for MA on
+ever-exposure
 
 ```{r}
 
@@ -402,20 +437,15 @@ forest(ma_ever_incl.syn,
 
 ```
 
+##3.3 do various subgroup analyses
 
-
-##3.3 do various subgroup analyses 
-
-  3.3 do various subgroup analyses 
-    3.3.0 study design (external, internal, cohort, case-control)
-    3.3.1 effect sizes from highest vs. lowest exposure category used
-    3.3.2 overall quality (low, moderate, high)
-    3.3.3 exposure assessment quality (low, medium, high)
-    3.3.4 whether smoking was adjusted
-    3.3.5 stratify by continent
-  3.4 combine all results from 3.3 to produce one figure (fig 3)  
-  3.5 pub bias
-
+3.3 do various subgroup analyses 3.3.0 study design (external, internal,
+cohort, case-control) 3.3.1 effect sizes from highest vs. lowest
+exposure category used 3.3.2 overall quality (low, moderate, high) 3.3.3
+exposure assessment quality (low, medium, high) 3.3.4 whether smoking
+was adjusted 3.3.5 stratify by continent 3.4 combine all results from
+3.3 to produce one figure (fig 3)\
+3.5 pub bias
 
 ###3.3.0 study design (external, internal, cohort, case-control)
 
@@ -470,8 +500,6 @@ summary(ma_ever_2)
 
 
 ```
-
-
 
 ```{r by design cohort vs cc}
 
@@ -588,7 +616,6 @@ forest(meta_dat1,
 
 ```
 
-
 ```{r high exposure}
 
 dat_high <- tribble(~study, ~rr, ~lower_ci, ~upper_ci, ~cases, ~design, ~type,
@@ -652,12 +679,9 @@ forest(meta_dat2,
 
 ```
 
-
-###3.3.2-5 subgroup (batch producing)
-    3.3.2 overall quality (low, moderate, high)
-    3.3.3 exposure assessment quality (low, medium, high)
-    3.3.4 whether smoking was adjusted
-    3.3.5 stratify by continent
+###3.3.2-5 subgroup (batch producing) 3.3.2 overall quality (low,
+moderate, high) 3.3.3 exposure assessment quality (low, medium, high)
+3.3.4 whether smoking was adjusted 3.3.5 stratify by continent
 
 ```{r}
 
@@ -720,9 +744,8 @@ dev.off()
 
 ```
 
-
-  3.4 combine all results from 3.3 to produce one figure (fig 3)  
-  3.5 pub bias
+3.4 combine all results from 3.3 to produce one figure (fig 3)\
+3.5 pub bias
 
 ##3.4 combine subgroup results
 
@@ -821,8 +844,6 @@ dev.off()
 
 ```
 
-
-
 ##3.5 pub bias
 
 ```{r}
@@ -854,6 +875,7 @@ legend(x = 2, y = 0.02,
 ```
 
 we then produce egger's test
+
 ```{r}
 
 
@@ -868,7 +890,6 @@ eggers.test(ma_ever)
 
 
 ```
-
 
 #4. ROB score visulisation
 
@@ -890,7 +911,25 @@ rob_result <- tribble(
   "Greenland et al. (1994)*",   3, 1, 3, 0, 2, 1,
   "McHugh et al. (2010)*",      3, 0, 3, 1, 0, 1,
   "Wan et al. (2024)*",         2, 1, 4, 2, 0, 2
-                      ) %>% 
+) %>% 
+  as.data.frame() %>% 
+  mutate(
+    study = case_when(
+      study == "Wong et al. (1987)" ~ "Wong~et~al.~(1987)^51",
+      study == "Collins et al. (2003)" ~ "Collins~et~al.~(2003)^36",
+      study == "Sorahan et al. (2005)" ~ "Sorahan~et~al.~(2005)^54",
+      study == "Hoshuyama et al. (2006)" ~ "Hoshuyama~et~al.~(2006)^55",
+      study == "Koh et al. (2011)" ~ "Koh~et~al.~(2011)^52",
+      study == "Koh et al. (2014)" ~ "Koh~et~al.~(2014)^53",
+      study == "Linet et al. (2015)" ~ "Linet~et~al.~(2015)^48",
+      study == "Collins et al. (2015)" ~ "Collins~et~al.~(2015)^43",
+      study == "Babigumira et al. (2023)" ~ "Babigumira~et~al.~(2023)^7",
+      study == "DeMoulin et al. (2024)" ~ "DeMoulin~et~al.~(2024)^5",
+      study == "Greenland et al. (1994)*" ~ "Greenland~et~al.~(1994)^56",
+      study == "McHugh et al. (2010)*" ~ "McHugh~et~al.~(2010)^57",
+      study == "Wan et al. (2024)*" ~ "Wan~et~al.~(2024)^6",
+      TRUE ~ study
+    )) %>% 
   as.data.frame() %>% 
     mutate(
     D1 = case_when(
@@ -958,6 +997,7 @@ ggplot(data_long, aes(x = Domain, y = study, fill = rob, pattern = rob)) +
   scale_pattern_manual(values = c("Low risk" = "stripe", "Some concern" = "crosshatch", "High risk" = "circle"),
                        name = "",
                        guide = "legend") +
+  scale_y_discrete(labels = parse(text = levels(data_long$study))) +
   theme_minimal() +
   labs(
        x = "",
@@ -971,83 +1011,124 @@ dev.off()
 
 ```
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
+########################################################################## 
 
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
+########################################################################## 
 
+########################################################################## 
 
-legancy chunks below, DO NOT RUN. 
+########################################################################## 
 
+########################################################################## 
 
-##########################################################################
+########################################################################## 
 
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+########################################################################## 
+
+legancy chunks below, DO NOT RUN.
+
+########################################################################## 
 
 using one knot and test the res curve shows no difference
+
 ```{r}
 
 knots_new <- quantile(dat_metareg$exp,  0.5)
@@ -1115,5 +1196,3 @@ ggplot(dat_metareg, aes(x = exp, y = exp(logrr))) +
 
 
 ```
-
-
